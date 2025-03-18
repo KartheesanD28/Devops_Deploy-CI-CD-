@@ -1,4 +1,4 @@
-name: HTML CI Pipeline
+name: HTML CI/CD Pipeline
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  html-lint:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -21,3 +21,9 @@ jobs:
 
       - name: Run HTML Lint
         run: htmlhint index.html || true
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: .
