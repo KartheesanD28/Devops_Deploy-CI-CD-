@@ -5,8 +5,32 @@ metadata:
 spec:
   steps:
     - name: cleanup
-      image: alpine
+      image: busybox
       script: |
         #!/bin/sh
         echo "Cleaning up workspace..."
-        rm -rf /workspace/*
+        rm -rf /workspace/source/*
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: nose-test-task
+spec:
+  workspaces:
+    - name: source
+  steps:
+    - name: run-nose-tests
+      image: python:3.8
+      script: |
+        #!/bin/sh
+        set -e  # Exit on error
+        cd /workspace/source
+        pip install nose
+        nosetests --with-xunit --xunit-file=/workspace/test-results/nosetests.xml
+      volumeMounts:
+        - name: test-results
+          mountPath: /workspace/test-results
+
+  volumes:
+    - name: test-results
+      emptyDir: {}
