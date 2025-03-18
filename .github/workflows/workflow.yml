@@ -23,7 +23,6 @@ jobs:
           name: html-file
           path: |
             ./index.html
-
   # Deploy Job
   deploy:
     needs: build
